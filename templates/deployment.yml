@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: appname
-        image: ghcr.io/sudeeps91/${imagename}:latest
+        image: ghcr.io/sudeeps91/imagename:latest
         resources:
           requests:
              cpu: 500m
