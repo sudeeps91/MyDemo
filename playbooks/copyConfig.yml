@@ -1,0 +1,16 @@
+- name: Sync Pull task - Executed on  the Destination host
+  hosts: master1
+  become: yes
+  become_user: ubuntu
+  tasks:
+    - name: Copy the file
+      tags: sync-pull
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/ubuntu/config
+        mode: pull
+      delegate_to: localhost
+      register: syncfile
+      run_once: true
+      with_items:
+       - "/home/ubuntu/.kube/config"
