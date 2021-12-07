@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: appname
   labels:
-    app: app
+    app: appname
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: app
+      app: appname
   template:
     metadata:
       labels:
-        app: app
+        app: appname
     spec:
       imagePullSecrets:
       - name: regcred
       containers:
-      - name: app
-        image: busybox
+      - name: appname
+        image: imageurl
         resources:
           requests:
              cpu: 500m
