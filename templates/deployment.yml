@@ -14,8 +14,8 @@ spec:
       labels:
         app: appname
     spec:
-      imagePullSecrets:
-      - name: regcred
+#      imagePullSecrets:
+#      - name: regcred
       containers:
       - name: appname
         image: imageurl
