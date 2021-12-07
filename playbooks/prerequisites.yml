@@ -1,0 +1,12 @@
+- hosts: cluster
+  become: yes
+  tasks:
+    - name: set the swap off
+      shell:
+        cmd: swapoff -a
+
+    - name: Ubuntu | Configure Sysctl
+      sysctl:
+        name: "net.ipv4.ip_forward"
+        value: "1"
+        state: present

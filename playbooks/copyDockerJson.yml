@@ -1,0 +1,30 @@
+- hosts: cluster
+  become: yes
+  tasks:
+          #  - name: Copy file to a remote machine
+          #    copy:
+          #      src: /home/ubuntu/daemon.json
+          #      dest: /etc/docker/daemon.json
+          #
+  - name: Updating Docker cgroup on Slave Node
+    copy:
+      dest: /etc/docker/daemon.json
+      content: |
+        {
+        "exec-opts": ["native.cgroupdriver=systemd"]
+        }
+
+  - name: just force systemd to reread configs (2.4 and above)
+    systemd:
+      daemon_reload=yes 
+
+  - name: sleep for 20 seconds
+    wait_for:
+      timeout: 20
+
+  - name: restart docker daemon
+    shell: systemctl restart docker
+
+  - name: sleep for 20 seconds
+    wait_for:
+      timeout: 20

@@ -1,0 +1,134 @@
+---
+- hosts: k8sWorkers
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+  - name: Allow relevant kubernetes ports 10251 
+    ufw:
+      rule: allow 
+      port: 10251
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: Allow relevant kubernetes ports 10250 
+    ufw:
+      rule: allow 
+      port: 10250
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: Allow relevant kubernetes ports 10255
+    ufw:
+      rule: allow 
+      port: 10255
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant kubernetes ports 10254
+    ufw:
+      rule: allow
+      port: 10254
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant calico ports 179
+    ufw:
+      rule: allow
+      port: 179
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: Enable ufw
+    ufw:
+      state: enabled
+
+- hosts: k8sMaster
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+
+  tasks:
+
+  - name: allow relevant kubernetes ports 6443 
+    ufw:
+      rule: allow
+      port: 6443
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant kubernetes ports 10255
+    ufw:
+      rule: allow
+      port: 10255
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant kubernetes ports 10254
+    ufw:
+      rule: allow
+      port: 10254
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant kubernetes ports 2379 2380 
+    ufw:
+      rule: allow
+      proto: tcp
+      port: 2379:2380
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant kubernetes ports 10250 10251 10252 
+    ufw:
+      rule: allow
+      proto: tcp
+      port: 10250:10252
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: allow relevant calico ports 179
+    ufw:
+      rule: allow
+      port: 179
+      src: "{{ item }}"
+    with_items:
+      - "{{ hostvars['k8sWorker1'].ansible_host }}"
+      - "{{ hostvars['k8sWorker2'].ansible_host }}"
+      - "{{ hostvars['k8sMaster'].ansible_host }}"
+
+  - name: Enable ufw
+    ufw:
+      state: enabled

@@ -1,0 +1,14 @@
+[masters]
+master1 ansible_host=masterip ansible_connection=ssh ansible_user=ubuntu become=yes
+
+[workers]
+worker1 ansible_host=node1ip ansible_connection=ssh ansible_user=ubuntu become=yes
+worker2 ansible_host=node2ip ansible_connection=ssh ansible_user=ubuntu become=yes
+
+[all:vars]
+ansible ansible_host=ansibleip
+ansible_python_interpreter=/usr/bin/python3
+
+[cluster:children]
+masters
+workers

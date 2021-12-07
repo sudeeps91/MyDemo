@@ -1,0 +1,49 @@
+- hosts: masters
+  become: yes
+  tasks:
+          #    - name: getting hostname
+          #      command: 'hostname -i'
+          #      register: NODENAME
+
+    - name: initialize the cluster
+      #      shell: kubeadm init --apiserver-advertise-address=3.130.35.63 --apiserver-cert-extra-sans=3.130.35.63  --pod-network-cidr=10.244.0.0/16 --node-name {{ NODENAME.stdout }} --ignore-preflight-errors Swap >> cluster_initialized.txt
+      #      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      shell: kubeadm init --config aws.yml
+      #      register: result
+      #      until: result.stdout.find("Your Kubernetes control-plane has initialized successfully!") != -1
+      #      retries: 1
+      #      delay: 20
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+
+    - name: sleep for 20 seconds
+      wait_for:
+        timeout: 20
+
+    - name: create .kube directory
+      become: yes
+      become_user: ubuntu
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/ubuntu/.kube/config
+        remote_src: yes
+        owner: ubuntu
+
+    - name: install Pod network
+      become: yes
+      become_user: ubuntu
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt
+
+    - name: sleep for 20 seconds
+      wait_for:
+        timeout: 20
