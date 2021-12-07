@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appName
+  labels:
+    app: appName
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: appName
+  template:
+    metadata:
+      labels:
+        app: appName
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: appName
+        image: imageUrl
+        resources:
+          requests:
+             cpu: 500m
+        ports:
+        - containerPort: 80
