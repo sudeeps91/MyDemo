@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: appname
-  namespace: nsname
   labels:
     app: appname
 spec:
