@@ -5,7 +5,7 @@ metadata:
   labels:
     app: appname
 spec:
-  type: ExternalName
+  type: ClusterIp
   ports:
     - name: http
       port: 80
