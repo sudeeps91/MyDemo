@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: appname
+  namespace: nsname
   labels:
     app: appname
 spec:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
       - name: appname
-        image: ghcr.io/sudeeps91/imagename:latest
+        image: ghcr.io/sudeeps91/imagename
         resources:
           requests:
              cpu: 500m
