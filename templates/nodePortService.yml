@@ -5,7 +5,7 @@ metadata:
   labels:
     app: appname
 spec:
-  type: ExternalIp
+  type: ExternalName
   ports:
     - name: http
       port: 80
