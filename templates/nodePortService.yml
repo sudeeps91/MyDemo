@@ -6,13 +6,13 @@ metadata:
     app: appname
 spec:
   type: ClusterIP
-#  ports:
- #   - name: http
-  #    port: 80
+  ports:
+    - name: http
+      port: 80
   #    targetPort: 80
   #    nodePort: 30251
-  #  - name: https
-  #    port: 443
+    - name: https
+  #   port: 443
   #    targetPort: 443
    #   nodePort: 30252
   selector:
