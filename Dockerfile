@@ -6,4 +6,5 @@ WORKDIR /scripts
 RUN chmod +x script.sh
 RUN mkdir -p /var/www/html/
 RUN chmod -R 750 /var
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 RUN /bin/sh script.sh
