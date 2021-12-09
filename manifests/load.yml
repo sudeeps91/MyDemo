@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: infinite-calls
+  name: load-test
   labels:
-    app: infinite-calls
+    app: load-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: infinite-calls
+      app: load-test
   template:
     metadata:
-      name: infinite-calls
+      name: load-test
       labels:
-        app: infinite-calls
+        app: load-test
     spec:
       containers:
-      - name: infinite-calls
+      - name: load-test
         image: busybox
         command:
         - /bin/sh
