@@ -7,12 +7,10 @@
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE A SECURITY GROUP TO CONTROL WHAT REQUESTS CAN GO IN AND OUT OF THE EC2 INSTANCES
+# CREATE SECURITY GROUPS TO CONTROL WHAT REQUESTS CAN GO IN AND OUT OF THE EC2 INSTANCES
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_security_group" "ansible" {
-#  for_each = toset (var.vm_names)
-#  name = each.value
   name = "ansible"
 
   egress {
@@ -176,8 +174,6 @@ resource "aws_security_group" "master" {
 }
 
 resource "aws_security_group" "node1" {
-#  for_each = toset (var.vm_names)
-#  name = each.value
   name = "node1"
 
   egress {
@@ -191,9 +187,6 @@ resource "aws_security_group" "node1" {
     from_port = 22
     to_port   = 22
     protocol  = "tcp"
-
-    # To keep this example simple, we allow incoming SSH requests from any IP. In real-world usage, you should only
-    # allow SSH requests from trusted servers, such as a bastion host or VPN server.
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -311,8 +304,6 @@ resource "aws_security_group" "node1" {
 }
 
 resource "aws_security_group" "node2" {
-#  for_each = toset (var.vm_names)
-#  name = each.value
   name = "node2"
 
   egress {
@@ -326,9 +317,6 @@ resource "aws_security_group" "node2" {
     from_port = 22
     to_port   = 22
     protocol  = "tcp"
-
-    # To keep this example simple, we allow incoming SSH requests from any IP. In real-world usage, you should only
-    # allow SSH requests from trusted servers, such as a bastion host or VPN server.
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -445,7 +433,9 @@ resource "aws_security_group" "node2" {
   }
 }
 
-
+# ---------------------------------------------------------------------------------------------------------------------
+# GENERATING SSH KEY AND UPLOAD TO AWS TO GET KEY PAIR TO LOGIN TO EC2 INSTANCES
+# ---------------------------------------------------------------------------------------------------------------------
 
 
 resource "tls_private_key" "pk" {
@@ -473,7 +463,9 @@ output "private_key" {
 }
 
 
-#Creating VMs
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATING EC2 INSTANCES AND ASSIGNING ELASTIC IPS
+# ---------------------------------------------------------------------------------------------------------------------
 
 #creating vm for master
 resource "aws_instance" "master" {
@@ -539,7 +531,6 @@ resource "null_resource" "testnode1instance" {
     connection {
       type        = "ssh"
       host        = aws_eip.elasticip_node1.public_ip
-#      host_key = tls_private_key.pk.public_key_openssh
       private_key = file(var.private_key_path)
       user        = "ubuntu"
     }
@@ -579,7 +570,6 @@ resource "null_resource" "testnode2instance" {
     connection {
       type        = "ssh"
       host        = aws_eip.elasticip_node2.public_ip
-#      host_key = tls_private_key.pk.public_key_openssh
       private_key = file(var.private_key_path)
       user        = "ubuntu"
     }
@@ -620,7 +610,6 @@ resource "null_resource" "testinstance" {
    connection {
       type        = "ssh"
       host        = aws_eip.elasticip_ansible.public_ip
-#      host_key = tls_private_key.pk.public_key_openssh
       private_key = file(var.private_key_path)
       user        = "ubuntu"
     }
@@ -646,10 +635,6 @@ resource "null_resource" "testinstance" {
  provisioner "local-exec" {
     command = "sed -i 's/ansibleip/${aws_eip.elasticip_ansible.public_ip}/g' origHosts"
     }
-
- provisioner "local-exec" {
-    command = "sed -i 's/IPADDR/${aws_eip.elasticip_master.public_ip}/g' /root/infrastructure/playbook/master.yml"
-    } 
 
 
 provisioner "file" {
