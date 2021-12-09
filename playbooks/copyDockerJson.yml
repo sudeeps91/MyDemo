@@ -1,11 +1,6 @@
 - hosts: cluster
   become: yes
   tasks:
-          #  - name: Copy file to a remote machine
-          #    copy:
-          #      src: /home/ubuntu/daemon.json
-          #      dest: /etc/docker/daemon.json
-          #
   - name: Updating Docker cgroup on Slave Node
     copy:
       dest: /etc/docker/daemon.json
